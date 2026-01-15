@@ -1,22 +1,39 @@
-# Python
-.venv/
-venv/
-**/venv/
-__pycache__/
-*.py[cod]
-*$py.class
-.env
-.python-version
-
-# Node
+# Dependencies
 node_modules/
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
 .next/
 out/
-build/
-dist/
-.DS_Store
 
-# Misc
-.idea/
+# IDE
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
 *.log
+npm-debug.log*
+
+# Temporary files
+.turbo/
+.cache/
+
+# Firebase
+.firebase/
+firebase-debug.log

@@ -1,8 +1,0 @@
-opencv-python
-mediapipe
-torch
-torchvision
-ultralytics
-flask
-flask-cors
-numpy

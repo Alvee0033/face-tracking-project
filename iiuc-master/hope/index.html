@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hope AI Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      @keyframes breathe {
+        0%, 100% {
+          transform: scale(1);
+          box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1), 0 8px 10px -6px rgba(59, 130, 246, 0.1);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 20px 30px -5px rgba(59, 130, 246, 0.2), 0 15px 15px -6px rgba(59, 130, 246, 0.15);
+        }
+      }
+      .animate-breathe {
+        animation: breathe 4s ease-in-out infinite;
+      }
+
+      @keyframes ripple {
+        from {
+          transform: scale(0.8);
+          opacity: 0.7;
+        }
+        to {
+          transform: scale(2);
+          opacity: 0;
+        }
+      }
+      .ripple {
+        position: absolute;
+        border-radius: 50%;
+        animation: ripple 1.5s infinite cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      /* CareerBot animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-slideUp {
+        animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* Smooth scrollbar for CareerBot chat */
+      .careerbot-messages::-webkit-scrollbar {
+        width: 6px;
+      }
+      .careerbot-messages::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+      .careerbot-messages::-webkit-scrollbar-thumb {
+        background: #cbd5e0;
+        border-radius: 10px;
+      }
+      .careerbot-messages::-webkit-scrollbar-thumb:hover {
+        background: #a0aec0;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.1",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-gray-200">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
