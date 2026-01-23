@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Invitation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #633ff3 0%, #5330d4 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        .congratulations {
+            background-color: #f0f9ff;
+            border-left: 4px solid #633ff3;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        .congratulations h2 {
+            color: #633ff3;
+            margin: 0 0 10px 0;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .congratulations p {
+            color: #555555;
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .job-details {
+            background-color: #fafafa;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .job-details h3 {
+            color: #333333;
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .detail-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #666666;
+            width: 140px;
+            flex-shrink: 0;
+        }
+        .detail-value {
+            color: #333333;
+            flex: 1;
+        }
+        .next-steps {
+            margin: 25px 0;
+        }
+        .next-steps h3 {
+            color: #333333;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .next-steps p {
+            color: #555555;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #633ff3;
+            color: #ffffff;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #5330d4;
+        }
+        .tips {
+            background-color: #fff9e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        .tips h4 {
+            color: #d97706;
+            margin: 0 0 12px 0;
+            font-size: 16px;
+        }
+        .tips ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #555555;
+        }
+        .tips li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        .footer {
+            background-color: #fafafa;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e5e5;
+        }
+        .footer p {
+            color: #666666;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .footer-links {
+            margin: 15px 0;
+        }
+        .footer-links a {
+            color: #633ff3;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 8px;
+            color: #666666;
+            text-decoration: none;
+        }
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            .header {
+                padding: 30px 20px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .detail-row {
+                flex-direction: column;
+            }
+            .detail-label {
+                width: 100%;
+                margin-bottom: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="icon">🎉</div>
+            <h1>Interview Invitation</h1>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="greeting">
+                Hello <strong>{{to_name}}</strong>,
+            </div>
+
+            <!-- Congratulations Box -->
+            <div class="congratulations">
+                <h2>
+                    <span>🌟</span> Congratulations!
+                </h2>
+                <p>
+                    We are thrilled to inform you that after carefully reviewing your application, 
+                    you have been <strong>shortlisted</strong> for the next stage of our recruitment process!
+                </p>
+            </div>
+
+            <!-- Job Details -->
+            <div class="job-details">
+                <h3>Position Details</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Position:</span>
+                    <span class="detail-value"><strong>{{job_title}}</strong></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Company:</span>
+                    <span class="detail-value"><strong>{{company_name}}</strong></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Recruiter:</span>
+                    <span class="detail-value">{{recruiter_name}}</span>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="next-steps">
+                <h3>📅 What Happens Next?</h3>
+                <p>
+                    <strong>{{recruiter_name}}</strong> from our hiring team will be reaching out to you shortly 
+                    to schedule your interview. Please keep an eye on your email and phone for our communication.
+                </p>
+                <p>
+                    In the meantime, we encourage you to learn more about our company and the role to prepare 
+                    for the upcoming interview.
+                </p>
+            </div>
+
+            <!-- Interview Preparation Tips -->
+            <div class="tips">
+                <h4>💡 Interview Preparation Tips</h4>
+                <ul>
+                    <li>Review the job description and requirements carefully</li>
+                    <li>Research our company culture, values, and recent achievements</li>
+                    <li>Prepare examples of your past work and accomplishments</li>
+                    <li>Think of questions you'd like to ask about the role and team</li>
+                    <li>Test your internet connection and video setup (if virtual interview)</li>
+                </ul>
+            </div>
+
+            <p style="color: #555555; line-height: 1.6; margin-top: 25px;">
+                We were impressed by your qualifications and experience, and we're excited about 
+                the possibility of you joining our team. This is a great opportunity for both of us 
+                to explore how we can work together.
+            </p>
+
+            <p style="color: #555555; line-height: 1.6; margin-top: 15px;">
+                If you have any questions in the meantime, please don't hesitate to reach out.
+            </p>
+
+            <p style="color: #333333; margin-top: 30px;">
+                Best regards,<br>
+                <strong>{{company_name}} Hiring Team</strong>
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p style="font-weight: 600; color: #333333;">{{company_name}}</p>
+            <p>You're receiving this email because you applied for a position with us.</p>
+            
+            <div class="footer-links">
+                <a href="#">About Us</a> | 
+                <a href="#">Careers</a> | 
+                <a href="#">Contact</a>
+            </div>
+
+            <div class="social-links">
+                <a href="#">LinkedIn</a> | 
+                <a href="#">Twitter</a> | 
+                <a href="#">Website</a>
+            </div>
+
+            <p style="font-size: 12px; color: #999999; margin-top: 20px;">
+                © 2025 {{company_name}}. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

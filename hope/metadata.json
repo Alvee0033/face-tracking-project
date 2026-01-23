@@ -1,0 +1,8 @@
+{
+  "name": "Hope AI Companion",
+  "description": "A web-based conversational AI companion designed to provide a warm, empathetic, and supportive listening ear, specifically for young people navigating the challenges of unemployment.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}

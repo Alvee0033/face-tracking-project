@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: iiuc-master-api
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: API_PREFIX
+        value: /api/v1
+      - key: ALLOWED_ORIGINS
+        value: https://iiuc-master-frontend.firebaseapp.com,https://iiuc-master-frontend.web.app
+      - key: SUPABASE_URL
+        scope: secret
+      - key: SUPABASE_ANON_KEY
+        scope: secret
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        scope: secret
+      - key: JWT_SECRET
+        scope: secret
+      - key: OPENAI_API_KEY
+        scope: secret
+      - key: REMOVE_BG_API_KEY
+        scope: secret
+      - key: JITSI_APP_ID
+        scope: secret
+      - key: JITSI_API_KEY_ID
+        scope: secret
+      - key: JITSI_PRIVATE_KEY
+        scope: secret
+      - key: JITSI_DOMAIN
+        value: 8x8.vc
