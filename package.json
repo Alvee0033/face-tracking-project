@@ -1,21 +1,17 @@
 {
-  "name": "jobsite",
-  "version": "1.0.0",
-  "description": "AI-Powered Job Portal",
-  "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm run dev",
-    "install:all": "npm run install:backend && npm run install:frontend",
-    "install:backend": "cd backend && npm install",
-    "install:frontend": "cd frontend && npm install",
-    "start:backend": "cd backend && npm start",
-    "start:frontend": "cd frontend && npm start"
-  },
-  "dependencies": {
-    "i18next": "^25.6.0"
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
-  }
+    "name": "iiuc-nextjs",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "apis",
+        "web"
+    ],
+    "scripts": {
+        "dev:api": "npm run start:dev --workspace=apis",
+        "dev:web": "npm run dev --workspace=web",
+        "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\""
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
 }
