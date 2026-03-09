@@ -10,7 +10,14 @@ export class MessagingService {
         @InjectRepository(Message) private msgRepo: Repository<Message>,
     ) { }
 
-    async getOrCreateConversation(recruiterId: string, candidateId: string, jobId?: string) {
+    /**
+     * Gets an existing conversation or creates a new one between a recruiter and candidate.
+     * @param recruiterId Recruiter ID
+     * @param candidateId Candidate ID
+     * @param jobId Optional Job ID context
+     * @returns The conversation object
+     */
+    async getOrCreateConversation(recruiterId: string, candidateId: string, jobId?: string): Promise<Conversation> {
         let conv = await this.convRepo.findOne({
             where: { recruiterId, candidateId },
         });
@@ -21,7 +28,12 @@ export class MessagingService {
         return conv;
     }
 
-    async getMyConversations(userId: string) {
+    /**
+     * Retrieves all conversations for a specific user.
+     * @param userId The User ID
+     * @returns List of conversations
+     */
+    async getMyConversations(userId: string): Promise<Conversation[]> {
         return this.convRepo.find({
             where: [{ recruiterId: userId }, { candidateId: userId }],
             relations: ['recruiter', 'candidate'],
@@ -29,7 +41,12 @@ export class MessagingService {
         });
     }
 
-    async getMessages(conversationId: string) {
+    /**
+     * Retrieves all messages for a specific conversation.
+     * @param conversationId The Conversation ID
+     * @returns List of messages
+     */
+    async getMessages(conversationId: string): Promise<Message[]> {
         return this.msgRepo.find({
             where: { conversationId },
             relations: ['sender'],
@@ -37,14 +54,29 @@ export class MessagingService {
         });
     }
 
-    async sendMessage(senderId: string, conversationId: string, content: string, attachmentUrl?: string) {
+    /**
+     * Sends a new message within a conversation.
+     * @param senderId The sender's ID
+     * @param conversationId The conversation ID
+     * @param content Message content
+     * @param attachmentUrl Optional attachment URL
+     * @returns The saved message
+     */
+    async sendMessage(senderId: string, conversationId: string, content: string, attachmentUrl?: string): Promise<Message> {
         const msg = this.msgRepo.create({ senderId, conversationId, content, attachmentUrl });
         const saved = await this.msgRepo.save(msg);
         await this.convRepo.update(conversationId, { lastMessageAt: new Date() });
         return saved;
     }
 
-    async markRead(conversationId: string, userId: string) {
+    /**
+     * Marks all unread messages in a conversation as read.
+     * @param conversationId The conversation ID
+     * @param userId The User ID (currently marks all, could be restricted to recipient)
+     * @returns Success message
+     */
+    async markRead(conversationId: string, userId: string): Promise<{ message: string }> {
+        // Optimization: ideally only mark messages as read where senderId != userId
         await this.msgRepo.update({ conversationId, isRead: false }, { isRead: true });
         return { message: 'Messages marked as read' };
     }

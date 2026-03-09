@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsOptional, IsNumber, IsArray, IsDateString, Min } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsNumber, IsArray, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { JobType, JobStatus, ExperienceLevel, WorkMode } from '../job.entity';
 

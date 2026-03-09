@@ -9,7 +9,13 @@ import { Roles } from '../../common/decorators/roles.decorator';
 @Roles('admin') @ApiBearerAuth('JWT')
 @Controller('admin')
 export class AdminController {
+  /**
+   * Endpoint to perform an admin health check.
+   * @returns Health status object
+   */
   @Get('health')
   @ApiOperation({ summary: 'Admin health check (admin only)' })
-  health() { return { status: 'Admin panel OK', timestamp: new Date() }; }
+  health(): { status: string; timestamp: Date } {
+    return { status: 'Admin panel OK', timestamp: new Date() };
+  }
 }

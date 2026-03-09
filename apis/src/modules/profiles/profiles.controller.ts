@@ -77,9 +77,15 @@ export class ProfilesController {
     @ApiOperation({ summary: 'Get recruiter profile by user ID' })
     getRecruiterById(@Param('userId') userId: string) { return this.service.getRecruiterProfile(userId); }
 
+    /**
+     * Endpoint to list all candidate profiles.
+     * @param page Page number
+     * @param limit Items per page
+     * @returns Paginated list of candidates
+     */
     @Get('candidates')
     @ApiOperation({ summary: 'List all candidate profiles' })
-    listCandidates(@Query('page') page: number, @Query('limit') limit: number) {
+    listCandidates(@Query('page') page: number, @Query('limit') limit: number): Promise<{ data: any[]; total: number }> {
         return this.service.listCandidates(page, limit);
     }
 

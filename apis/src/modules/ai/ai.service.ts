@@ -314,7 +314,14 @@ Return a detailed JSON object for a "roadmap" comprising:
         throw new Error('All AI models failed to generate a valid exam. This may be due to high traffic or specific skill complexity. Please try again in 1 minute.');
     }
 
-    async evaluateSkillExam(skillName: string, answers: any[], questions: any[]) {
+    /**
+     * Evaluates a user's answers to a skill exam.
+     * @param skillName The name of the skill
+     * @param answers Array of user answers
+     * @param questions Array of original questions
+     * @returns The exam results including score and pass status
+     */
+    async evaluateSkillExam(skillName: string, answers: any[], questions: any[]): Promise<{ score: number; passed: boolean; correctCount: number; totalQuestions: number }> {
         let correctCount = 0;
         answers.forEach((ans: any) => {
             // Support both questionId (if sent) and questionIndex (if sent)

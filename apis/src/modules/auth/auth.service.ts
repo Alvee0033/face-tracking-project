@@ -13,8 +13,13 @@ export class AuthService {
         private jwtService: JwtService,
     ) { }
 
-    async signup(dto: SignupDto) {
-        const exists = await this.usersRepo.findOne({ where: { email: dto.email } });
+    /**
+     * Registers a new user.
+     * @param dto Signup data transfer object
+     * @returns The registered user without password and the generated JWT token
+     */
+    async signup(dto: SignupDto): Promise<{ user: Partial<User>; token: string }> {
+        const exists = await this.usersRepo.exists({ where: { email: dto.email } });
         if (exists) throw new ConflictException('Email already registered');
 
         const hashedPassword = await bcrypt.hash(dto.password, 12);
@@ -28,7 +33,12 @@ export class AuthService {
         return { user: this.sanitize(user), token };
     }
 
-    async login(dto: LoginDto) {
+    /**
+     * Authenticates a user.
+     * @param dto Login data transfer object
+     * @returns The authenticated user without password and the generated JWT token
+     */
+    async login(dto: LoginDto): Promise<{ user: Partial<User>; token: string }> {
         const user = await this.usersRepo.findOne({ where: { email: dto.email } });
         if (!user) throw new UnauthorizedException('Invalid credentials');
 
@@ -39,16 +49,32 @@ export class AuthService {
         return { user: this.sanitize(user), token };
     }
 
-    async getMe(userId: string) {
+    /**
+     * Retrieves the current authenticated user's profile.
+     * @param userId The ID of the authenticated user
+     * @returns The user's profile without password
+     */
+    async getMe(userId: string): Promise<Partial<User>> {
         const user = await this.usersRepo.findOne({ where: { id: userId } });
+        if (!user) throw new UnauthorizedException('User not found');
         return this.sanitize(user);
     }
 
-    private generateToken(user: User) {
+    /**
+     * Generates a JWT token for the given user.
+     * @param user The user object
+     * @returns A signed JWT token
+     */
+    private generateToken(user: User): string {
         return this.jwtService.sign({ sub: user.id, email: user.email, role: user.role });
     }
 
-    private sanitize(user: User) {
+    /**
+     * Removes sensitive information from the user object.
+     * @param user The user object
+     * @returns The user object without sensitive information
+     */
+    private sanitize(user: User): Partial<User> {
         const { password, ...rest } = user;
         return rest;
     }

@@ -10,7 +10,12 @@ export class CvService {
     this.groq = new Groq({ apiKey: config.get('GROQ_API_KEY') });
   }
 
-  async parseResume(text: string) {
+  /**
+   * Parses resume text and extracts structured data using AI.
+   * @param text The raw resume text
+   * @returns Parsed JSON object of the resume
+   */
+  async parseResume(text: string): Promise<any> {
     const response = await this.groq.chat.completions.create({
       model: 'llama-3.2-3b-preview',
       messages: [{
@@ -24,7 +29,12 @@ Return strictly valid JSON: { "fullName": "", "email": "", "phone": "", "summary
     return JSON.parse(response.choices[0].message.content);
   }
 
-  async generateSummary(profileData: any) {
+  /**
+   * Generates a compelling professional summary from profile data.
+   * @param profileData Candidate profile information
+   * @returns An object containing the generated summary
+   */
+  async generateSummary(profileData: any): Promise<{ summary: string }> {
     const response = await this.groq.chat.completions.create({
       model: 'llama-3.2-3b-preview',
       messages: [{
@@ -37,7 +47,12 @@ Return a 3-4 sentence professional summary in plain text.`,
     return { summary: response.choices[0].message.content };
   }
 
-  async enhanceBullets(data: { bullets: string[] }) {
+  /**
+   * Refines resume bullet points to be more impactful.
+   * @param data Object containing bullets
+   * @returns Enhanced bullets as an array of strings
+   */
+  async enhanceBullets(data: { bullets: string[] }): Promise<{ enhancedBullets: string[] }> {
     const response = await this.groq.chat.completions.create({
       model: 'llama-3.2-3b-preview',
       messages: [{
@@ -51,7 +66,12 @@ Return a 3-4 sentence professional summary in plain text.`,
     return JSON.parse(response.choices[0].message.content);
   }
 
-  async generateRecommendations(data: { skills: string[]; roles: string[] }) {
+  /**
+   * Generates AI career recommendations based on skills and roles.
+   * @param data Object containing skills and target roles
+   * @returns AI recommendations for skills and industries
+   */
+  async generateRecommendations(data: { skills: string[]; roles: string[] }): Promise<{ suggestedSkills: string[]; targetIndustries: string[]; advice: string }> {
     const response = await this.groq.chat.completions.create({
       model: 'llama-3.2-3b-preview',
       messages: [{

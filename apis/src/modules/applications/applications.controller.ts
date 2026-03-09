@@ -25,37 +25,67 @@ class UpdateStatusDto {
 export class ApplicationsController {
     constructor(private service: ApplicationsService) { }
 
+    /**
+     * Endpoint to apply for a job.
+     * @param req The request object containing user details
+     * @param dto Application details
+     * @returns The created application
+     */
     @Post()
     @UseGuards(RolesGuard) @Roles('candidate')
     @ApiOperation({ summary: 'Apply to a job (candidate only)' })
-    apply(@Request() req, @Body() dto: ApplyDto) {
+    apply(@Request() req: any, @Body() dto: ApplyDto): Promise<any> {
         return this.service.apply(req.user.id, dto);
     }
 
+    /**
+     * Endpoint to retrieve a candidate's own applications.
+     * @param req The request object containing user details
+     * @returns List of the candidate's applications
+     */
     @Get('candidate')
     @UseGuards(RolesGuard) @Roles('candidate')
     @ApiOperation({ summary: 'Get candidate own applications' })
-    async myApplications(@Request() req) {
+    async myApplications(@Request() req: any): Promise<{ applications: any[] }> {
         const applications = await this.service.findByCandidate(req.user.id);
         return { applications };
     }
 
+    /**
+     * Endpoint to retrieve all applications for jobs managed by the current recruiter.
+     * @param req The request object containing user details
+     * @returns List of applications
+     */
     @Get('recruiter')
     @UseGuards(RolesGuard) @Roles('recruiter')
     @ApiOperation({ summary: 'Get all applications for recruiter jobs' })
-    recruiterApplications(@Request() req) { return this.service.findByRecruiter(req.user.id); }
+    recruiterApplications(@Request() req: any): Promise<any[]> {
+        return this.service.findByRecruiter(req.user.id);
+    }
 
+    /**
+     * Endpoint to retrieve all applications for a specific job.
+     * @param req The request object containing user details
+     * @param jobId The job's ID
+     * @returns List of applications for the job
+     */
     @Get('job/:jobId')
     @UseGuards(RolesGuard) @Roles('recruiter')
     @ApiOperation({ summary: 'Get applications for a specific job' })
-    byJob(@Request() req, @Param('jobId') jobId: string) {
+    byJob(@Request() req: any, @Param('jobId') jobId: string): Promise<any[]> {
         return this.service.findByJob(jobId, req.user.id);
     }
 
+    /**
+     * Endpoint to update the status of an application.
+     * @param id The application ID
+     * @param dto The status update details
+     * @returns The updated application
+     */
     @Patch(':id/status')
     @UseGuards(RolesGuard) @Roles('recruiter')
     @ApiOperation({ summary: 'Update application status (recruiter only)' })
-    updateStatus(@Param('id') id: string, @Body() dto: UpdateStatusDto) {
+    updateStatus(@Param('id') id: string, @Body() dto: UpdateStatusDto): Promise<any> {
         return this.service.updateStatus(id, dto.status, dto.notes);
     }
 }

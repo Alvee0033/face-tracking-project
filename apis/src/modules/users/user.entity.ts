@@ -1,6 +1,5 @@
 import {
-    Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
-    OneToOne, OneToMany,
+    Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';

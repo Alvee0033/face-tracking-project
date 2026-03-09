@@ -222,7 +222,13 @@ export class ProfilesService {
         }
     }
 
-    async listCandidates(page = 1, limit = 20) {
+    /**
+     * Lists all candidates with pagination.
+     * @param page Page number
+     * @param limit Items per page
+     * @returns Paginated list of candidates
+     */
+    async listCandidates(page = 1, limit = 20): Promise<{ data: CandidateProfile[]; total: number }> {
         const [data, total] = await this.candidateRepo.findAndCount({
             relations: ['user'],
             skip: (page - 1) * limit,

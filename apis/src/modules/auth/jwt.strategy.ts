@@ -18,7 +18,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(payload: { sub: string; email: string }) {
+    /**
+     * Validates the JWT payload and retrieves the corresponding user.
+     * @param payload The decoded JWT payload
+     * @returns The user entity
+     * @throws UnauthorizedException if the user is not found
+     */
+    async validate(payload: { sub: string; email: string }): Promise<User> {
         const user = await this.usersRepo.findOne({ where: { id: payload.sub } });
         if (!user) throw new UnauthorizedException();
         return user;

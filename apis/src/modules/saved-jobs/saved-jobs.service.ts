@@ -14,18 +14,38 @@ export class SavedJobsService {
     private aiService: AiService
   ) { }
 
-  async save(userId: string, jobId: string, type: string = 'saved') {
-    const existing = await this.repo.findOne({ where: { userId, jobId, type } });
+  /**
+   * Saves a job for a user or adds it to their interested list.
+   * @param userId User ID
+   * @param jobId Job ID
+   * @param type 'saved' or 'interested'
+   * @returns The created record
+   */
+  async save(userId: string, jobId: string, type: string = 'saved'): Promise<SavedJob> {
+    const existing = await this.repo.exists({ where: { userId, jobId, type } });
     if (existing) throw new ConflictException('Job already ' + type);
     return this.repo.save(this.repo.create({ userId, jobId, type }));
   }
 
-  async remove(userId: string, jobId: string, type: string = 'saved') {
+  /**
+   * Removes a job from a user's saved or interested list.
+   * @param userId User ID
+   * @param jobId Job ID
+   * @param type 'saved' or 'interested'
+   * @returns Success message
+   */
+  async remove(userId: string, jobId: string, type: string = 'saved'): Promise<{ message: string }> {
     await this.repo.delete({ userId, jobId, type });
     return { message: `Job removed from ${type}` };
   }
 
-  async findAll(userId: string, type: string = 'saved') {
+  /**
+   * Finds all saved or interested jobs for a user.
+   * @param userId User ID
+   * @param type 'saved' or 'interested'
+   * @returns List of jobs
+   */
+  async findAll(userId: string, type: string = 'saved'): Promise<any[]> {
     const list = await this.repo.find({ where: { userId, type }, relations: ['job', 'job.recruiter'] });
     return list.map(item => {
       const j = item.job as any;
@@ -44,16 +64,27 @@ export class SavedJobsService {
     });
   }
 
-  async checkStatus(userId: string, jobId: string) {
-    const saved = await this.repo.findOne({ where: { userId, jobId, type: 'saved' } });
-    const interested = await this.repo.findOne({ where: { userId, jobId, type: 'interested' } });
+  /**
+   * Checks whether a job is saved or interested by a user.
+   * @param userId User ID
+   * @param jobId Job ID
+   * @returns Status object
+   */
+  async checkStatus(userId: string, jobId: string): Promise<{ isSaved: boolean; isInterested: boolean }> {
+    const saved = await this.repo.exists({ where: { userId, jobId, type: 'saved' } });
+    const interested = await this.repo.exists({ where: { userId, jobId, type: 'interested' } });
     return {
-      isSaved: !!saved,
-      isInterested: !!interested
+      isSaved: saved,
+      isInterested: interested
     };
   }
 
-  async getLearningRoadmap(userId: string) {
+  /**
+   * Generates a learning roadmap based on user's interested jobs and current skills.
+   * @param userId User ID
+   * @returns AI generated learning roadmap
+   */
+  async getLearningRoadmap(userId: string): Promise<any> {
     const profile = await this.profileRepo.findOne({ where: { userId } });
     if (!profile) throw new NotFoundException('Profile not found. Please create your profile first');
 

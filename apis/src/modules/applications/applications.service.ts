@@ -18,8 +18,14 @@ export class ApplicationsService {
         this.groq = new Groq({ apiKey: config.get('GROQ_API_KEY') });
     }
 
-    async apply(candidateId: string, dto: { jobId: string; coverLetter?: string; resumeUrl?: string }) {
-        const existing = await this.repo.findOne({ where: { candidateId, jobId: dto.jobId } });
+    /**
+     * Applies to a specific job.
+     * @param candidateId The candidate's ID
+     * @param dto Application details
+     * @returns The saved application
+     */
+    async apply(candidateId: string, dto: { jobId: string; coverLetter?: string; resumeUrl?: string }): Promise<Application> {
+        const existing = await this.repo.exists({ where: { candidateId, jobId: dto.jobId } });
         if (existing) throw new ConflictException('You have already applied to this job');
 
         const job = await this.jobRepo.findOne({ where: { id: dto.jobId } });
@@ -34,7 +40,12 @@ export class ApplicationsService {
         return saved;
     }
 
-    async findByCandidate(candidateId: string) {
+    /**
+     * Retrieves all applications submitted by a specific candidate.
+     * @param candidateId The candidate's ID
+     * @returns A list of applications with job and recruiter profile info
+     */
+    async findByCandidate(candidateId: string): Promise<any[]> {
         const apps = await this.repo.find({
             where: { candidateId },
             relations: ['job', 'job.recruiter'],
@@ -57,7 +68,13 @@ export class ApplicationsService {
         });
     }
 
-    async findByJob(jobId: string, recruiterId: string) {
+    /**
+     * Retrieves all applications for a specific job.
+     * @param jobId The job's ID
+     * @param recruiterId The recruiter's ID (currently unused but reserved for permission checks)
+     * @returns A list of applications ordered by AI score
+     */
+    async findByJob(jobId: string, recruiterId: string): Promise<Application[]> {
         const job = await this.jobRepo.findOne({ where: { id: jobId } });
         if (!job) throw new NotFoundException('Job not found');
         return this.repo.find({
@@ -67,7 +84,12 @@ export class ApplicationsService {
         });
     }
 
-    async findByRecruiter(recruiterId: string) {
+    /**
+     * Retrieves all applications across all jobs managed by a specific recruiter.
+     * @param recruiterId The recruiter's ID
+     * @returns A list of applications
+     */
+    async findByRecruiter(recruiterId: string): Promise<Application[]> {
         return this.repo
             .createQueryBuilder('app')
             .leftJoinAndSelect('app.job', 'job')
@@ -77,15 +99,27 @@ export class ApplicationsService {
             .getMany();
     }
 
-    async updateStatus(id: string, status: ApplicationStatus, notes?: string) {
+    /**
+     * Updates the status of an application.
+     * @param id The application ID
+     * @param status The new status
+     * @param notes Optional recruiter notes
+     * @returns The updated application
+     */
+    async updateStatus(id: string, status: ApplicationStatus, notes?: string): Promise<Application> {
         const app = await this.repo.findOne({ where: { id } });
-        if (!app) throw new NotFoundException();
+        if (!app) throw new NotFoundException('Application not found');
         app.status = status;
         if (notes) app.recruiterNotes = notes;
         return this.repo.save(app);
     }
 
-    private async analyzeCompatibility(applicationId: string, data: { job: Job }) {
+    /**
+     * Analyzes candidate compatibility with the job using an AI prompt.
+     * @param applicationId The application ID
+     * @param data Object containing job data
+     */
+    private async analyzeCompatibility(applicationId: string, data: { job: Job }): Promise<void> {
         try {
             const prompt = `You are an expert HR analyst. Analyze the job requirements and rate the overall compatibility score.
 
@@ -118,11 +152,23 @@ Provide a JSON response with:
         }
     }
 
-    async getStats() {
-        const total = await this.repo.count();
-        const pending = await this.repo.count({ where: { status: ApplicationStatus.PENDING } });
-        const shortlisted = await this.repo.count({ where: { status: ApplicationStatus.SHORTLISTED } });
-        const hired = await this.repo.count({ where: { status: ApplicationStatus.HIRED } });
+    /**
+     * Retrieves application statistics.
+     * @returns Statistics object including total, pending, shortlisted, and hired counts.
+     */
+    async getStats(): Promise<{ total: number; pending: number; shortlisted: number; hired: number }> {
+        const statsQuery = await this.repo.createQueryBuilder('app')
+            .select('COUNT(app.id)', 'total')
+            .addSelect(`SUM(CASE WHEN app.status = '${ApplicationStatus.PENDING}' THEN 1 ELSE 0 END)`, 'pending')
+            .addSelect(`SUM(CASE WHEN app.status = '${ApplicationStatus.SHORTLISTED}' THEN 1 ELSE 0 END)`, 'shortlisted')
+            .addSelect(`SUM(CASE WHEN app.status = '${ApplicationStatus.HIRED}' THEN 1 ELSE 0 END)`, 'hired')
+            .getRawOne();
+
+        const total = parseInt(statsQuery.total, 10) || 0;
+        const pending = parseInt(statsQuery.pending, 10) || 0;
+        const shortlisted = parseInt(statsQuery.shortlisted, 10) || 0;
+        const hired = parseInt(statsQuery.hired, 10) || 0;
+
         return { total, pending, shortlisted, hired };
     }
 }
